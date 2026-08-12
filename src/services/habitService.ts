@@ -1,6 +1,5 @@
 import axios from 'axios'
-
-const API_URL = 'http://localhost:8080/api'
+import { API_URL } from '../config'
 
 export interface Habit {
   id: number
@@ -12,6 +11,11 @@ export interface Habit {
 export const habitService = {
   getAll: async (): Promise<Habit[]> => {
     const response = await axios.get(`${API_URL}/habits`)
+    return response.data
+  },
+
+  create: async (habit: Omit<Habit, 'id'>): Promise<Habit> => {
+    const response = await axios.post(`${API_URL}/habits`, habit)
     return response.data
   }
 }
