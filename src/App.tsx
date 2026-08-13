@@ -24,16 +24,24 @@ function App() {
     setHabits([...habits, newHabit])
   }
 
+  const handleHabitDeleted = (id:number) => {
+    setHabits(habits.filter(habit => habit.id !== id))
+  }
+
   const handleMeetingRoomCreated = (newMeetingRoom: MeetingRoom) => {
     setMeetingRooms([...meetingRooms, newMeetingRoom])
+  }
+
+  const handleMeetingRoomDeleted = (id:number) => {
+    setMeetingRooms(meetingRooms.filter(meetingRooms => meetingRooms.id !== id))
   }
 
   return (
     <div>
       <h1>Life OS</h1>
-      <HabitListe habits={habits} />
+      <HabitListe habits={habits} onHabitDeleted={handleHabitDeleted}/>
       <CreateHabitForm onHabitCreated={handeleHabitCreated} />
-      <MeetingRoomList meetingRooms={meetingRooms} />
+      <MeetingRoomList meetingRooms={meetingRooms} onMeetingRoomDeleted={handleMeetingRoomDeleted} />
       <CreateMeetingRoomForm onMeetingRoomCreated={handleMeetingRoomCreated}/>
     </div>
   )

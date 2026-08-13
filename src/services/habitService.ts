@@ -17,5 +17,9 @@ export const habitService = {
   create: async (habit: Omit<Habit, 'id'>): Promise<Habit> => {
     const response = await axios.post(`${API_URL}/habits`, habit)
     return response.data
+  },
+
+  remove: async (id: number): Promise<void> => {
+    await axios.delete(`${API_URL}/habits/${id}`)
   }
 }

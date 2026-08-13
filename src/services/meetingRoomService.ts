@@ -18,5 +18,9 @@ export const meetingRoomService = {
   create: async (meetingRoom: Omit<MeetingRoom, 'id'>): Promise<MeetingRoom> => {
     const response = await axios.post(`${API_URL}/meeting-rooms`, meetingRoom)
     return response.data
+  },
+
+  remove: async (id:number): Promise<void> => {
+    await axios.delete(`${API_URL}/meeting-rooms/${id}`)
   }
 }
