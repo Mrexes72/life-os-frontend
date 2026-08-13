@@ -5,7 +5,7 @@ export interface MeetingRoom {
   id: number
   name: string
   description: string
-  capacity: number
+  numberOfSeats: number
   hourlyRate: number
 }
 

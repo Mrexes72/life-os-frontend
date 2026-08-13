@@ -1,26 +1,29 @@
 import { useState } from 'react'
-import { meetingRoomService } from '../../services/meetingRoomService'
+import { meetingRoomService, type MeetingRoom } from '../../services/meetingRoomService'
 
-export function CreateMeetingRoomForm() {
+interface Props {
+  onMeetingRoomCreated: (meetingRoom: MeetingRoom) => void
+}
+
+export function CreateMeetingRoomForm({ onMeetingRoomCreated }: Props) {
   const [name, setName] = useState<string>("")
   const [description, setDescription] = useState<string>("")
-  const [capacity, setCapacity] = useState<number>(0)
+  const [numberOfSeats, setNumberOfSeats] = useState<number>(0)
   const [hourlyRate, setHourlyRate] = useState<number>(0)
   const [error, setError] = useState<string | null>(null)
 
   const handleSubmit = async (event: React.SubmitEvent<HTMLFormElement>) => {
     event.preventDefault()
-    setError(null)
     try {
-      await meetingRoomService.create({ name, description, capacity, hourlyRate})
+      const newMeetingRoom = await meetingRoomService.create({ name, description, numberOfSeats, hourlyRate})
       // Handle successful creation: reset form
+      onMeetingRoomCreated(newMeetingRoom)
       setName("")
       setDescription("")
-      setCapacity(0)
+      setNumberOfSeats(0)
       setHourlyRate(0)
     } catch (err) {
       setError("Kunne ikke opprette møterom. Prøv igjenn senere.")
-      console.error("Feil ved oppretting av møterom:", err)
     }
   }
 
@@ -50,8 +53,8 @@ export function CreateMeetingRoomForm() {
           <input 
           type="number"
           id="capacity"
-          value={capacity}
-          onChange={(e) => setCapacity(parseInt(e.target.value))}
+          value={numberOfSeats}
+          onChange={(e) => setNumberOfSeats(parseInt(e.target.value))}
           required
           />
         </div>
