@@ -1,19 +1,21 @@
 import { useState } from "react"
 import type { Habit } from "../../services/habitService"
 import { habitService } from "../../services/habitService"
+import { useOutletContext } from "react-router-dom"
 
 interface Props {
   habits: Habit[],
-  onHabitDeleted: (id: number) => void
+  handleHabitDeleted: (id: number) => void;
 }
 
-export function HabitListe({ habits, onHabitDeleted }: Props) {
+export function HabitListe() {
+  const { habits, handleHabitDeleted } = useOutletContext<Props>();
   const [error, setError] = useState<string | null>(null)
 
   const handleDelete = async (id: number) => {
     try {
       await habitService.remove(id)
-      onHabitDeleted(id)
+      handleHabitDeleted(id)
     } catch (err) {
         setError("Kunne ikke slette vanen. Prøv igjenn senere")
     }

@@ -1,16 +1,15 @@
 import { useState, useEffect } from "react"
+import { Outlet } from "react-router-dom"
+import { Navbar } from "./components/Navbar"
 import { habitService } from "./services/habitService"
-import type { Habit } from "./services/habitService"
-import { HabitListe } from "./components/habits/HabitListe"
 import { meetingRoomService } from "./services/meetingRoomService"
+import type { Habit } from "./services/habitService"
 import type { MeetingRoom } from "./services/meetingRoomService"
-import { MeetingRoomList } from "./components/meetingrooms/MeetingRoomList"
-import { CreateHabitForm } from "./components/habits/CreateHabitForm"
-import { CreateMeetingRoomForm } from "./components/meetingrooms/CreateMeetingRoomForm"
 
 function App() {
+  // HOOKS ER FLYTTET HIT – PÅ INNSIDEN AV KOMPONENTEN
   const [habits, setHabits] = useState<Habit[]>([])
-  const [meetingRooms, setMeetingRooms] =  useState<MeetingRoom[]>([])
+  const [meetingRooms, setMeetingRooms] = useState<MeetingRoom[]>([])
 
   useEffect(() => {
     habitService.getAll().then(setHabits)
@@ -20,11 +19,11 @@ function App() {
     meetingRoomService.getAll().then(setMeetingRooms)
   }, [])
 
-  const handeleHabitCreated = (newHabit: Habit) => {
+  const handleHabitCreated = (newHabit: Habit) => {
     setHabits([...habits, newHabit])
   }
 
-  const handleHabitDeleted = (id:number) => {
+  const handleHabitDeleted = (id: number) => {
     setHabits(habits.filter(habit => habit.id !== id))
   }
 
@@ -32,17 +31,26 @@ function App() {
     setMeetingRooms([...meetingRooms, newMeetingRoom])
   }
 
-  const handleMeetingRoomDeleted = (id:number) => {
-    setMeetingRooms(meetingRooms.filter(meetingRooms => meetingRooms.id !== id))
+  const handleMeetingRoomDeleted = (id: number) => {
+    setMeetingRooms(meetingRooms.filter(room => room.id !== id))
   }
 
+  // Siden rutene dine ligger i main.tsx, må vi sende staten og funksjonene 
+  // videre ned til undersidene via en "context" i Outlet
   return (
     <div>
       <h1>Life OS</h1>
-      <HabitListe habits={habits} onHabitDeleted={handleHabitDeleted}/>
-      <CreateHabitForm onHabitCreated={handeleHabitCreated} />
-      <MeetingRoomList meetingRooms={meetingRooms} onMeetingRoomDeleted={handleMeetingRoomDeleted} />
-      <CreateMeetingRoomForm onMeetingRoomCreated={handleMeetingRoomCreated}/>
+      <Navbar />
+      <main style={{ padding: '20px' }}>
+        <Outlet context={{ 
+          habits, 
+          meetingRooms, 
+          handleHabitCreated, 
+          handleHabitDeleted, 
+          handleMeetingRoomCreated, 
+          handleMeetingRoomDeleted 
+        }} />
+      </main>
     </div>
   )
 }

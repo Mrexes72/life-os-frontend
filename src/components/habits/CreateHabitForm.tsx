@@ -1,12 +1,14 @@
 import { useState } from "react"
 import { habitService } from "../../services/habitService"
 import type { Habit } from "../../services/habitService"
+import { useOutletContext } from "react-router-dom"
 
 interface Props {
-  onHabitCreated: (habit: Habit) => void
+  handleHabitCreated: (habit: Habit) => void
 }
 
-export function CreateHabitForm({ onHabitCreated }: Props) {
+export function CreateHabitForm() {
+  const {handleHabitCreated} = useOutletContext<Props>();
   const [name, setName] = useState<string>("")
   const [description, setDescription] = useState<string>("")
   const [streakDays, setStreakDays] = useState<number>(0)
@@ -16,7 +18,7 @@ const handleSubmit = async (event: React.SubmitEvent<HTMLFormElement>) => {
     event.preventDefault()
     try {
       const newHabit = await habitService.create({ name, description, streakDays })
-      onHabitCreated(newHabit)  // 👈 fortell App at en ny habit ble opprettet
+      handleHabitCreated(newHabit)  // 👈 fortell App at en ny habit ble opprettet
       setName("")
       setDescription("")
       setStreakDays(0)

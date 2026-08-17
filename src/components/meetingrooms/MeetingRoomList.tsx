@@ -1,18 +1,20 @@
 import { useState } from "react"
 import { meetingRoomService, type MeetingRoom } from "../../services/meetingRoomService"
+import { useOutletContext } from "react-router-dom"
 
 interface Props {
   meetingRooms: MeetingRoom[]
-  onMeetingRoomDeleted: (id:number) => void
+  handleMeetingRoomDeleted: (id:number) => void
 }
 
-export function MeetingRoomList({ meetingRooms, onMeetingRoomDeleted}: Props) {
+export function MeetingRoomList() {
+  const { meetingRooms, handleMeetingRoomDeleted } =  useOutletContext<Props>();
   const [error, setError] = useState<string | null>(null)
 
   const handleDelete = async (id:number) => {
     try {
       await meetingRoomService.remove(id)
-      onMeetingRoomDeleted(id)
+      handleMeetingRoomDeleted(id)
     } catch (err) {
       setError("Kunne ikke slette møterom. Prøv igjenn senere")
     }

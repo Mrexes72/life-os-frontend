@@ -1,11 +1,13 @@
 import { useState } from 'react'
 import { meetingRoomService, type MeetingRoom } from '../../services/meetingRoomService'
+import { useOutletContext } from 'react-router-dom'
 
 interface Props {
-  onMeetingRoomCreated: (meetingRoom: MeetingRoom) => void
+  handleMeetingRoomCreated: (meetingRoom: MeetingRoom) => void
 }
 
-export function CreateMeetingRoomForm({ onMeetingRoomCreated }: Props) {
+export function CreateMeetingRoomForm() {
+  const { handleMeetingRoomCreated } = useOutletContext<Props>();
   const [name, setName] = useState<string>("")
   const [description, setDescription] = useState<string>("")
   const [numberOfSeats, setNumberOfSeats] = useState<number>(0)
@@ -17,7 +19,7 @@ export function CreateMeetingRoomForm({ onMeetingRoomCreated }: Props) {
     try {
       const newMeetingRoom = await meetingRoomService.create({ name, description, numberOfSeats, hourlyRate})
       // Handle successful creation: reset form
-      onMeetingRoomCreated(newMeetingRoom)
+      handleMeetingRoomCreated(newMeetingRoom)
       setName("")
       setDescription("")
       setNumberOfSeats(0)
